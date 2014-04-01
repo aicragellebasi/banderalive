@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Using sign in and sign up with parse</title>
+	<!-- JQUERY -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="http://www.parsecdn.com/js/parse-1.2.18.min.js"></script>
+	<!-- BOOTSTRAP -->
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+	<!-- FONT AWESOME -->
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+	<!-- CUSTOM SCRIPTS -->
+	<script src="js/admin-main.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			Parse.initialize("bWvY8GIhV0Q6s3IJlfn9uqU4c22HmAdM9YpTFsTD", "bigv24fPDaGWtRaLLjjRzABL0gmz9ZML4pHQdGee");
+
+			var user = Parse.User.current();
+
+			//console.log(user);
+			if (user){
+				loggedIn();
+				//console.log('logged in');
+			} else {
+				notLoggedIn();
+				//console.log('logged out');
+			}
+		})
+
+	</script>
+</head>
+<body>
+	<div class="container">
+		<nav id="mainNav" class="navbar navbar-inverse" role="navigation">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Bandera Live Admin</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li id="addEventLi"><a data-toggle="modal" data-target="#eventForm"><i class="fa fa-plus"></i> Add Event</a></li>
+				<li id="eventLi"><a id="#eventList"><i class="fa fa-envelope"></i> Events</a></li>
+			</ul>
+			<ul class="nav navbar-nav pull-right">
+				<li id="signinLi"><a data-toggle="modal" data-target="#signinForm">Sign In</a></li>
+				<li id="signupLi"><a data-toggle="modal" data-target="#signupForm">Sign Up</a></li>
+				<li id="signoutLi"><a id="signoutLink">Sign Out</a></li>
+			</ul>
+		</nav>
+	</div>
+
+<!--  -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="signinForm">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header">
+          <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+          <h4 id="mySmallModalLabel" class="modal-title">Sign In</h4>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+      </div>
+  </div>
+</div>
+
+
+</body>
+</html>
