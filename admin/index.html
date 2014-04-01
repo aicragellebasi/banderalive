@@ -32,7 +32,63 @@
 				notLoggedIn();
 				//console.log('logged out');
 			}
-		})
+
+			/*SIGN IN*/
+			$('#signinSu').click(function(event){
+				event.preventDefault();
+				if($('#signinUs').val()==""){
+			      	$('#signinEr').text("Name is required");
+			      	$('#signinUs').addClass('focusedInput').focus();
+			    } else if ($('#signinPw').val()==""){
+			    	$('#signinEr').text("Password is required");
+			      	$('#signinPw').addClass('focusedInput').focus();
+			    } else {
+			    	Parse.User.logIn($('#signinUs').val(), $('#signinPw').val(), {
+					  success: function(user) {
+					    $('#signinUs').val("");
+						$('#signinPw').val("");
+						$('#signinForm').modal('hide');
+						loggedIn();
+					  },
+					  error: function(user, error) {
+					    console.log("There was an error signing in");
+					  }
+					});
+			    }
+			});
+
+			/*SIGN UP*/
+			$('#signupSu').click(function(event){
+				event.preventDefault();
+				if($('#signupUs').val()==""){
+			      	$('#signupEr').text("Name is required");
+			      	$('#signupUs').addClass('focusedInput').focus();
+			    } else if ($('#signupPw').val()==""){
+			    	$('#signupEr').text("Password is required");
+			      	$('#signupPw').addClass('focusedInput').focus();
+			    } else if ($('#signupPw').val()!=$('#signupPwVe').val()) {
+			    	$('#signupEr').text("Password does not match");
+			      	$('#signupPwVe').addClass('focusedInput').focus();
+			    } else {
+			    	var user = new Parse.User();
+					user.set("username", $('#signupUs').val());
+					user.set("password", $('#signupPw').val());
+					user.signUp(null, {
+						success: function(u){
+							$('#signupUs').val("");
+							$('#signupPw').val("");
+							$('#signupPwVe').val("");
+							$('#signupForm').modal('hide');
+							loggedIn();
+						},
+						error: function(u, e){
+							console.log("There was an error signing up");
+						}
+					});
+			    }
+			});
+
+		});
 
 	</script>
 </head>
@@ -54,7 +110,7 @@
 		</nav>
 	</div>
 
-<!--  -->
+<!-- SIGN IN -->
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="signinForm">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -63,7 +119,48 @@
           <h4 id="mySmallModalLabel" class="modal-title">Sign In</h4>
         </div>
         <div class="modal-body">
-          ...
+          <form role="form">
+			  <div class="form-group">
+			    <label for="signinUs">User name</label>
+			    <input type="text" class="form-control" id="signinUs" placeholder="Enter username">
+			  </div>
+			  <div class="form-group">
+			    <label for="signinPw">Password</label>
+			    <input type="password" class="form-control" id="signinPw" placeholder="Password">
+			  </div>
+			  <p class="bg-info" id="signinEr"></p>
+			  <button type="submit" class="btn btn-default" id="signinSu">Submit</button>
+			</form>
+        </div>
+      </div>
+  </div>
+</div>
+
+<!-- SIGN UP -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="signupForm">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header">
+          <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+          <h4 id="mySmallModalLabel" class="modal-title">Sign In</h4>
+        </div>
+        <div class="modal-body">
+          <form role="form">
+			  <div class="form-group">
+			    <label for="signupUs">User name</label>
+			    <input type="text" class="form-control" id="signupUs" placeholder="Enter username">
+			  </div>
+			  <div class="form-group">
+			    <label for="signupPw">Password</label>
+			    <input type="password" class="form-control" id="signupPw" placeholder="Password">
+			  </div>
+			  <div class="form-group">
+			    <label for="signupPwVe">Password</label>
+			    <input type="password" class="form-control" id="signupPwVe" placeholder="Password">
+			  </div>
+			  <p class="bg-info" id="signupEr"></p>
+			  <button type="submit" class="btn btn-default" id="signupSu">Submit</button>
+			</form>
         </div>
       </div>
   </div>
