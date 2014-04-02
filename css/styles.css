@@ -6052,3 +6052,17 @@ button.close {
     display: none !important;
   }
 }
+body {
+  /*font-family: 'Boogaloo', cursive;
+	font-family: 'Averia Sans Libre', cursive;*/
+  font-family: 'Londrina Sketch', cursive;
+  font-family: 'Unkempt', cursive;
+  font-family: 'Combo', cursive;
+  /*font-family: 'Happy Monkey', cursive;
+	font-family: 'Unica One', cursive;
+	font-family: 'Neucha', cursive;
+	font-family: 'Rock Salt', cursive;
+	font-family: 'Permanent Marker', cursive;
+	font-family: 'Give You Glory', cursive;
+	font-family: 'Schoolbell', cursive;*/
+}
