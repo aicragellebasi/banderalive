@@ -42,6 +42,10 @@
 				notLoggedIn();
 			}
 
+			/* LIST EVENTS IF ANY */
+			var queryEvent = new Parse.Query(Event);
+			listEvent(queryEvent);
+
 			/*SIGN IN*/
 			$('#signinSu').click(function(event){
 				event.preventDefault();
@@ -60,28 +64,6 @@
 				notLoggedIn();
 			});
 
-			/* ADD EVENT 
-			$('#addEventSu').on('click',function(){
-				event.preventDefault();
-				console.log('event');
-				var newEvent = new Event();
-				newEvent.set("title",$('#addEventTi').val());
-				newEvent.set("text",$('#addEventTe').val());
-
-				newEvent.save(null, {
-					success: function(m){
-						console.log(m.id);
-						console.log(m.get("name"));
-						console.log(m.get("email"));
-						console.log(m.get("msg"));
-					},
-					error: function(m, e){
-						$('#addEventEr').text('There was an error adding your event.');
-						console.log(e.description);
-					}
-				});
-			});*/
-
 			$('#addEventSu').click(function(event){
 				event.preventDefault();
 				$('input, textarea').removeClass('focusedInput');
@@ -97,29 +79,11 @@
 			    		eventTi: $('#addEventTi').val(),
 			    		eventTe: $('#addEventTe').val()
 			    	}
-			    	console.log(data.eventTi);
-			    	console.log(data.eventTe);
-			    	/**/
 			    	
 					var newEvent = new Event();
-
-					newEvent.set("title", data.eventTi);
-					newEvent.set("text", data.eventTe);
-
-					newEvent.save(null, {
-						success: function(m){
-							console.log(m.id);
-							console.log(m.get("title"));
-							console.log(m.get("text"));
-						},
-						error: function(m,i){
-							alert("There was a problem saving the event");
-						}
-					});
-					$('#addEventEr').text("Thanks, your event has been saved.");
-					setTimeout(function(){
-						$('#addEventForm').modal('hide');
-					},1000);
+					addEvent(newEvent, data);
+					
+					listEvent(queryEvent);
 			    }
 			});
 
@@ -129,6 +93,8 @@
 </head>
 <body>
 	<div class="container">
+
+		<!-- TOP NAVIGATION BAR -->
 		<nav id="mainNav" class="navbar navbar-inverse" role="navigation">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="#">Admin</a>
@@ -143,7 +109,13 @@
 				<li id="signoutLi"><a id="signoutLink">Sign Out</a></li>
 			</ul>
 		</nav>
-	</div>
+
+		<!-- LIST EVENT -->
+		<div class="panel-group" id="accordion">
+			<!-- APPENDING VIA JQUERY HERE -->
+		</div>
+
+	</div><!-- End container -->
 
 <!-- SIGN IN -->
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="signinForm">
@@ -202,7 +174,7 @@
 </div>
 
 
-<!-- SIGN UP -->
+<!-- ADD EVENT -->
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="addEventForm">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -230,6 +202,9 @@
       </div>
   </div>
 </div>
+
+
+
 
 	<!-- Bootstrap core JavaScript
     ================================================== -->
