@@ -38,24 +38,27 @@
 
 			if (user){
 				loggedIn();
+				/* LIST EVENTS IF ANY */
+				var queryEvent = new Parse.Query(Event);
+				listEvent(queryEvent);
 			} else {
 				notLoggedIn();
 			}
 
-			/* LIST EVENTS IF ANY */
-			var queryEvent = new Parse.Query(Event);
-			listEvent(queryEvent);
+			
 
 			/*SIGN IN*/
 			$('#signinSu').click(function(event){
 				event.preventDefault();
 				signIn();
+				listEvent(queryEvent);
 			});
 
 			/*SIGN UP*/
 			$('#signupSu').click(function(event){
 				event.preventDefault();
 				signUp();
+				listEvent(queryEvent);
 			});
 
 			/* LOG OUT */

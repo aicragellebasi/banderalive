@@ -89,6 +89,7 @@ function addEvent(nEvent, data){
 
 
 function listEvent(query){
+	$('#accordion').empty();
 	query.find({
 		success: function(results){
 			//console.log('success retrieving the events');
