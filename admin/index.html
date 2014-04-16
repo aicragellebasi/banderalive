@@ -36,10 +36,12 @@
 
 			var user = Parse.User.current();
 
+			var queryEvent = new Parse.Query(Event);
+
 			if (user){
 				loggedIn();
 				/* LIST EVENTS IF ANY */
-				var queryEvent = new Parse.Query(Event);
+				
 				listEvent(queryEvent);
 			} else {
 				notLoggedIn();
@@ -64,9 +66,11 @@
 			/* LOG OUT */
 			$('#signoutLink').on('click',function(){
 				Parse.User.logOut();
+				$('#accordion').empty();
 				notLoggedIn();
 			});
-
+			
+			/* SUBMIT EVENTS */
 			$('#addEventSu').click(function(event){
 				event.preventDefault();
 				$('input, textarea').removeClass('focusedInput');
