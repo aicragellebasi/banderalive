@@ -66,7 +66,7 @@
 			/* LOG OUT */
 			$('#signoutLink').on('click',function(){
 				Parse.User.logOut();
-				$('#accordion').empty();
+				$('#accordionEvents').empty();
 				notLoggedIn();
 			});
 			
@@ -118,7 +118,7 @@
 		</nav>
 
 		<!-- LIST EVENT -->
-		<div class="panel-group" id="accordion">
+		<div class="panel-group" id="accordionEvents">
 			<!-- APPENDING VIA JQUERY HERE -->
 		</div>
 
