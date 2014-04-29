@@ -71,8 +71,6 @@ function addEvent(nEvent, data){
 	nEvent.set("text", data.eventTe);
 	nEvent.set("imgFile", data.eventIm);
 
-	//nEvent.set(name, file);
-
 	nEvent.save(null, {
 		success: function(e){
 			console.log(e.id);
@@ -88,7 +86,19 @@ function addEvent(nEvent, data){
 			console.log(i);
 		}
 	});	
-	
+}
+
+function getImgFile(){
+	var fileUploadControl = $("#addEventIm")[0];
+	if (fileUploadControl.files.length > 0) {
+	  var file = fileUploadControl.files[0];
+	  var name = file.name;
+	  var parseFile = new Parse.File(name, file);
+	  return parseFile;
+	} else {
+		return false;
+	}
+
 }
 
 

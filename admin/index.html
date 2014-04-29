@@ -82,16 +82,22 @@
 			    	$('#addEventEr').text("Email is required");
 			      	$('#addEventTe').addClass('focusedInput').focus();
 			    } else {
+			    	/*
 			    	var fileUploadControl = $("#addEventIm")[0];
 					if (fileUploadControl.files.length > 0) {
 					  var file = fileUploadControl.files[0];
 					  var name = file.name;
 					  var parseFile = new Parse.File(name, file);
 					}
+					*/
+					if (getImgFile()!=false){
+						var imgFile = getImgFile();
+					}
+					
 			    	var data = {
 			    		eventTi: $('#addEventTi').val(),
 			    		eventTe: $('#addEventTe').val(),
-			    		eventIm: parseFile
+			    		eventIm: imgFile
 			    	}
 
 			    	console.log(data);
