@@ -66,9 +66,12 @@ function signUp(){
 }
 
 function addEvent(nEvent, data){
-	console.log(nEvent);
+	//console.log(nEvent);
 	nEvent.set("title", data.eventTi);
 	nEvent.set("text", data.eventTe);
+	nEvent.set("imgFile", data.eventIm);
+
+	//nEvent.set(name, file);
 
 	nEvent.save(null, {
 		success: function(e){
@@ -81,7 +84,8 @@ function addEvent(nEvent, data){
 			},1000);
 		},
 		error: function(e,i){
-			$('#addEventEr').text("There was a problem saving the event");
+			$('#addEventEr').text("There was a problem saving the event: ");
+			console.log(i);
 		}
 	});	
 	
