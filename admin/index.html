@@ -6,6 +6,8 @@
 	<!-- JQUERY -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="http://www.parsecdn.com/js/parse-1.2.18.min.js"></script>
+	<script src="http://tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+	<script src="http://tinymce.cachefly.net/4.0/jquery.tinymce.min.js"></script>
 	<link href='http://fonts.googleapis.com/css?family=Boogaloo|Averia+Sans+Libre|Londrina+Sketch|Unkempt|Combo|Happy+Monkey|Unica+One|Neucha|Rock+Salt|Permanent+Marker|Give+You+Glory|Schoolbell' rel='stylesheet' type='text/css'>
 	<link href="../css/styles.css" rel="stylesheet">
 	<!-- BOOTSTRAP -->
@@ -46,7 +48,13 @@
 				notLoggedIn();
 			}
 
-			
+			tinyMCE.init({
+		        // General options
+		        selector: "textarea"
+
+		});
+
+
 
 			/*SIGN IN*/
 			$('#signinSu').click(function(event){
@@ -72,13 +80,15 @@
 			/* SUBMIT EVENTS */
 			$('#addEventSu').click(function(event){
 				event.preventDefault();
+				//console.log('no jQuery selector: '+tinyMCE.activeEditor.getContent());
+				//console.log('jQuery selector: '+$('#addEventTe').val());
 				$('input, textarea').removeClass('focusedInput');
 				$('#addEventEr').text("");
 				if($('#addEventTi').val()==""){
 			      	$('#addEventEr').text("Name is required");
 			      	$('#addEventTi').addClass('focusedInput').focus();
-			    } else if ($('#addEventTe').val()==""){
-			    	$('#addEventEr').text("Email is required");
+			    } else if (tinyMCE.activeEditor.getContent()== ""){
+			    	$('#addEventEr').text("Text for your event is required");
 			      	$('#addEventTe').addClass('focusedInput').focus();
 			    } else {
 					if (getImgFile()!=false){
@@ -86,7 +96,7 @@
 					}
 			    	var data = {
 			    		eventTi: $('#addEventTi').val(),
-			    		eventTe: $('#addEventTe').val(),
+			    		eventTe: tinyMCE.activeEditor.getContent(),
 			    		eventIm: imgFile
 			    	}
 
@@ -94,8 +104,11 @@
 			    	
 					var newEvent = new Event();
 					addEvent(newEvent, data);
+					setTimeout(function(){
+						listEvent(queryEvent);
+					},1000);
 					
-					listEvent(queryEvent);
+					
 			    }
 			});
 

@@ -78,8 +78,12 @@ function addEvent(nEvent, data){
 			console.log(e.get("text"));
 			$('#addEventEr').text("Thanks, your event has been saved.");
 			setTimeout(function(){
+				$('#addEventForm input').val('');
+				//$('#addEventForm #addEventTe').val('');
+				tinyMCE.activeEditor.setContent('');
+				$('#addEventForm #addEventEr').empty();
 				$('#addEventForm').modal('hide');
-				$('#addEventEr').empty();
+				
 			},1000);
 		},
 		error: function(e,i){
@@ -113,8 +117,8 @@ function listEvent(query){
 
 				var dataEvent = results[i];
 				var toggleID = 'collapse-'+i;
-				buildCollapsePanel(dataEvent, toggleID, query)
-
+				buildCollapsePanel(dataEvent, toggleID, query);
+				//console.log(results[i]);
 			}
 		},
 		error: function(error){
