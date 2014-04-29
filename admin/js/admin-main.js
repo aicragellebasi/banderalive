@@ -79,11 +79,12 @@ function addEvent(nEvent, data){
 			$('#addEventEr').text("Thanks, your event has been saved.");
 			setTimeout(function(){
 				$('#addEventForm').modal('hide');
+				$('#addEventEr').empty();
 			},1000);
 		},
 		error: function(e,i){
-			$('#addEventEr').text("There was a problem saving the event: ");
-			console.log(i);
+			$('#addEventEr').text("There was a problem saving the event: "+i.message);
+			//console.log(i.message);
 		}
 	});	
 }
