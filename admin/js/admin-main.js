@@ -84,7 +84,7 @@ function addEvent(nEvent, data){
 				$('#addEventForm #addEventEr').empty();
 				$('#addEventForm').modal('hide');
 				
-			},1000);
+			},500);
 		},
 		error: function(e,i){
 			$('#addEventEr').text("There was a problem saving the event: "+i.message);
@@ -112,13 +112,10 @@ function listEvent(query){
 	query.find({
 		success: function(results){
 			//console.log('success retrieving the events');
-
 			for (i=0;i<results.length;i++){
-
 				var dataEvent = results[i];
 				var toggleID = 'collapse-'+i;
 				buildCollapsePanel(dataEvent, toggleID, query);
-				//console.log(results[i]);
 			}
 		},
 		error: function(error){
@@ -158,8 +155,11 @@ function buildCollapsePanel(data, collapseID, query){
 	panel.append(panelHeading);
 
 	//BUILDING THE CONTENT FOR THE COLLAPSIBLE PANELS
+	var img = data.get('imgFile');
+	var panelImg = $('<img>').attr('src', img.url()).addClass('col-sm-4 img-responsive');
 	var panelContent = $('<div>').addClass('panel-collapse collapse').attr('id',collapseID);
-	var panelBody = $('<div>').addClass('panel-body').append(data.get('text'));
+	var panelBody = $('<div>').addClass('panel-body row').append(panelImg).append(data.get('text'));
+	$('.panel-body p').addClass('col-8');
 
 	panelContent.append(panelBody);
 	panel.append(panelContent);
