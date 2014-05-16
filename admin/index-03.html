@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Using sign in and sign up with parse</title>
+	<!-- JQUERY -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="http://www.parsecdn.com/js/parse-1.2.18.min.js"></script>
+	<script src="http://tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+	<script src="http://tinymce.cachefly.net/4.0/jquery.tinymce.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Boogaloo|Averia+Sans+Libre|Londrina+Sketch|Unkempt|Combo|Happy+Monkey|Unica+One|Neucha|Rock+Salt|Permanent+Marker|Give+You+Glory|Schoolbell' rel='stylesheet' type='text/css'>
+	<link href="../css/styles.css" rel="stylesheet">
+	<!-- BOOTSTRAP -->
+	<!--link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script-->
+
+	<!-- FONT AWESOME -->
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<!-- TODO ADD THIS INTO THE LESS FILE -->
+	<style>
+		.focusedInput {
+		    border-color: rgba(82,168,236,.8);
+		    outline: 0;
+		    outline: thin dotted \9;
+		    -moz-box-shadow: 0 0 8px rgba(82,168,236,.6);
+		    box-shadow: 0 0 8px rgba(82,168,236,.6) !important;
+		}
+	</style>
+	<!-- CUSTOM SCRIPTS -->
+	<script src="js/admin-main-03.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			Parse.initialize("bWvY8GIhV0Q6s3IJlfn9uqU4c22HmAdM9YpTFsTD", "bigv24fPDaGWtRaLLjjRzABL0gmz9ZML4pHQdGee");
+
+			var Event = Parse.Object.extend("Event");
+
+			var user = Parse.User.current();
+
+			var queryEvent = new Parse.Query(Event);
+
+			if (user){
+				loggedIn();
+				/* LIST EVENTS IF ANY */
+				listEvent(queryEvent);
+			} else {
+				notLoggedIn();
+			}
+
+			tinyMCE.init({
+		        // General options
+		        selector: "textarea"
+			});
+
+			
+
+
+			/*SIGN IN*/
+			$('#signinSu').click(function(event){
+				event.preventDefault();
+				signIn();
+				listEvent(queryEvent);
+			});
+
+			/*SIGN UP*/
+			$('#signupSu').click(function(event){
+				event.preventDefault();
+				signUp();
+				listEvent(queryEvent);
+			});
+
+			/* LOG OUT */
+			$('#signoutLink').on('click',function(){
+				Parse.User.logOut();
+				$('#accordionEvents').empty();
+				notLoggedIn();
+			});
+			
+			/* SUBMIT EVENTS */
+			$('#addEventSu').click(function(event){
+				event.preventDefault();
+				//console.log('no jQuery selector: '+tinyMCE.activeEditor.getContent());
+				//console.log('jQuery selector: '+$('#addEventTe').val());
+				$('input, textarea').removeClass('focusedInput');
+				$('#addEventEr').text("");
+				if($('#addEventTi').val()==""){
+			      	$('#addEventEr').text("Name is required");
+			      	$('#addEventTi').addClass('focusedInput').focus();
+			    } else if (tinyMCE.activeEditor.getContent()== ""){
+			    	$('#addEventEr').text("Text for your event is required");
+			      	$('#addEventTe').addClass('focusedInput').focus();
+			    } else {
+					if (getImgFile()!=false){
+						var imgFile = getImgFile();
+					}
+			    	var data = {
+			    		eventTi: $('#addEventTi').val(),
+			    		eventTe: tinyMCE.activeEditor.getContent(),
+			    		eventIm: imgFile
+			    	}
+
+			    	//console.log(data);
+			    	
+					var newEvent = new Event();
+					addEvent(newEvent, data);
+					setTimeout(function(){
+						listEvent(queryEvent);
+					},1000);
+					
+					
+			    }
+			});
+
+
+		});
+
+	</script>
+</head>
+<body>
+	<div class="container">
+
+		<!-- TOP NAVIGATION BAR -->
+		<nav id="mainNav" class="navbar navbar-inverse" role="navigation">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Admin</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li id="addEventLi"><a data-toggle="modal" data-target="#addEventForm"><i class="fa fa-plus"></i> Add Event</a></li>
+				<li id="eventLi"><a id="#eventList"><i class="fa fa-envelope"></i> Events</a></li>
+			</ul>
+			<ul class="nav navbar-nav pull-right">
+				<li id="signinLi"><a data-toggle="modal" data-target="#signinForm">Sign In</a></li>
+				<li id="signupLi"><a data-toggle="modal" data-target="#signupForm">Sign Up</a></li>
+				<li id="signoutLi"><a id="signoutLink">Sign Out</a></li>
+			</ul>
+		</nav>
+
+		<!-- LIST EVENT -->
+		<div class="panel-group" id="accordionEvents">
+			<!-- APPENDING VIA JQUERY HERE -->
+		</div>
+
+	</div><!-- End container -->
+
+<!-- SIGN IN -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="signinForm">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header">
+          <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+          <h4 class="modal-title">Sign In</h4>
+        </div>  
+        <div class="modal-body">
+          <form role="form">
+			  <div class="form-group">
+			    <label for="signinUs">User name</label>
+			    <input type="text" class="form-control" id="signinUs" placeholder="Enter username">
+			  </div>
+			  <div class="form-group">
+			    <label for="signinPw">Password</label>
+			    <input type="password" class="form-control" id="signinPw" placeholder="Password">
+			  </div>
+			  <p class="bg-info" id="signinEr"></p>
+			  <button type="submit" class="btn btn-default" id="signinSu">Submit</button>
+			</form>
+        </div>
+      </div>
+  </div>
+</div>
+
+<!-- SIGN UP -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="signupForm">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header">
+          <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+          <h4 class="modal-title">Sign Up</h4>
+        </div>
+        <div class="modal-body">
+          <form role="form">
+			  <div class="form-group">
+			    <label for="signupUs">User name</label>
+			    <input type="text" class="form-control" id="signupUs" placeholder="Enter username">
+			  </div>
+			  <div class="form-group">
+			    <label for="signupPw">Password</label>
+			    <input type="password" class="form-control" id="signupPw" placeholder="Password">
+			  </div>
+			  <div class="form-group">
+			    <label for="signupPwVe">Password</label>
+			    <input type="password" class="form-control" id="signupPwVe" placeholder="Password">
+			  </div>
+			  <p class="bg-info" id="signupEr"></p>
+			  <button type="submit" class="btn btn-default" id="signupSu">Submit</button>
+			</form>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+<!-- ADD EVENT -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="addEventForm">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+          <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+          <h4 class="modal-title">Add an event</h4>
+        </div>
+        <div class="modal-body">
+          <form role="form">
+			  <div class="form-group">
+			    <label for="addEventTi">Title</label>
+			    <input type="text" class="form-control" id="addEventTi" placeholder="Enter username">
+			  </div>
+			  <div class="form-group">
+			    <label for="addEventTe">Text</label>
+			    <textarea class="form-control" rows="3" id="addEventTe"></textarea>
+			  </div>
+			  <div class="form-group">
+			    <label for="addEventIm">Upload an image</label>
+			    <input type="file" id="addEventIm">
+			    <p class="help-block">Example block-level help text here.</p>
+			  </div>
+			  <p class="bg-info" id="addEventEr"></p>
+			  <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="submit" class="btn btn-default" id="addEventSu">Save Changes</button>
+		      </div>
+			</form>
+        </div>
+      </div>
+  </div>
+</div>
+
+<!-- ALERT 
+<div id="alert" class="alert alert-danger fade in">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+</div>-->
+
+
+
+    <!--div class="alert alert-danger fade in">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4>Oh snap! You got an error!</h4>
+      <p>Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.</p>
+      <p>
+        <button type="button" class="btn btn-danger">Take this action</button>
+        <button type="button" class="btn btn-default">Or do this</button>
+      </p>
+    </div-->
+
+
+
+
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>	
+</body>
+</html>
