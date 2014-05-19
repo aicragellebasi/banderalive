@@ -50,7 +50,8 @@
 
 			tinyMCE.init({
 		        // General options
-		        selector: "textarea"
+		        selector: "textarea",
+		        force_p_newlines : false
 			});
 
 			
@@ -99,8 +100,6 @@
 			    		eventTe: tinyMCE.activeEditor.getContent(),
 			    		eventIm: imgFile
 			    	}
-
-			    	//console.log(data);
 			    	
 					var newEvent = new Event();
 					addEvent(newEvent, data);
