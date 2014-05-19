@@ -65,6 +65,21 @@ function signUp(){
     }
 }
 
+function getImgFile(){
+	var fileUploadControl = $("#addEventIm")[0];
+	if (fileUploadControl.files.length > 0) {
+	  var file = fileUploadControl.files[0];
+	  var name = file.name;
+	  var parseFile = new Parse.File(name, file);
+	  return parseFile;
+	} else {
+		return false;
+	}
+
+}
+
+function updateEvent(uEvent, data){/*TODO*/}
+
 function addEvent(nEvent, data){
 	//console.log(nEvent);
 	nEvent.set("title", data.eventTi);
@@ -73,9 +88,11 @@ function addEvent(nEvent, data){
 
 	nEvent.save(null, {
 		success: function(e){
+			/**/
 			console.log(e.id);
 			console.log(e.get("title"));
 			console.log(e.get("text"));
+
 			$('#addEventEr').text("Thanks, your event has been saved.");
 			setTimeout(function(){
 				$('#addEventForm input').val('');
@@ -93,20 +110,7 @@ function addEvent(nEvent, data){
 	});	
 }
 
-function getImgFile(){
-	var fileUploadControl = $("#addEventIm")[0];
-	if (fileUploadControl.files.length > 0) {
-	  var file = fileUploadControl.files[0];
-	  var name = file.name;
-	  var parseFile = new Parse.File(name, file);
-	  return parseFile;
-	} else {
-		return false;
-	}
-
-}
-
-
+/*TODO: Why my listEvent function is not working?????*/
 function listEvent(query){
 	$('#accordionEvents').empty();
 	query.find({
@@ -125,12 +129,6 @@ function listEvent(query){
 }
 
 function deleteEvent(e, panel, query){
-	//alert('are you sure you want to delete this event');
-	/*
-	var alertMd = alertBox('Attention', 'Are you sure you want to delete this event?', 'Yes, sure!', 'Noooo!');
-	panel.after(alertMd);
-	$("#alert").alert();
-	*/
 	e.destroy({
 	  success: function(myObject) {
 	    // The object was deleted from the Parse Cloud.
@@ -143,7 +141,6 @@ function deleteEvent(e, panel, query){
 	    console.log('There was an error deleting the event');
 	  }
 	});
-
 }
 
 
@@ -164,14 +161,28 @@ function buildCollapsePanel(data, collapseID, query){
 	var img = data.get('imgFile');
 	var panelImg = $('<img>').attr('src', img.url()).addClass('col-sm-4 img-responsive');
 	var panelContent = $('<div>').addClass('panel-collapse collapse').attr('id',collapseID);
-	//var eventText = data.get("text");
-	var panelBody = $('<div>').addClass('panel-body row').append(panelImg).append(data.get("text"));
-	var eventText = $('.panel-body p');
-	eventText.addClass('col-sm-8 editable');
+	//var pText = ('<p>').append();
+	var panelBody = $('<div>').addClass('panel-body row').append(panelImg).append('<p class="col-sm-8 editable">'+data.get("text")+'<p>');
+	//var eventText = $('.panel-body p');
+	//eventText.addClass('col-sm-8 editable');
 
 	var panelSubmit = $('<button>').addClass('btn btn-default').append('Submit changes').on('click',function(){
-		alert('sssdsdf');
-		// TODO UPDATE the edited doc. 
+		// Updating the event
+		event.preventDefault();
+    	var textUpdated = tinyMCE.activeEditor.getContent();
+    
+		data.save(null, {
+			  success: function(gameScore) {
+			    data.set("text", textUpdated);
+			    data.save();
+			    // Refreshing the list after successfull update
+			    /**/
+			    var queryEvent = new Parse.Query(Parse.Object.extend("Event"));
+			    listEvent(queryEvent);
+			    
+			  }
+		});
+			    	
 	});
 
 	panelContent.append(panelBody).append(panelSubmit);
@@ -202,10 +213,8 @@ function buildCollapsePanel(data, collapseID, query){
 	    ],
 	    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
 	});
-
 	
 }
-
 
 function alertBox(title, msg, okButton, cancelButton, data, object, query){
 	//var alertBox = $('#alert');
