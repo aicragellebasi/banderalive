@@ -110,7 +110,11 @@ function addEvent(nEvent, data){
 	});	
 }
 
-/*TODO: Why my listEvent function is not working?????*/
+/*TODO: Why my listEvent function is not working?????
+Actually it is, but, two things:
+1. When I edit an event, it refreshes but not with the last edits. [I have an idea, maybe I need to give it a time setTimeOut...]
+2. When I add or edit an event it lists it but do not creates the editable p
+*/
 function listEvent(query){
 	$('#accordionEvents').empty();
 	query.find({
