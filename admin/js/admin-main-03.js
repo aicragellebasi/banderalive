@@ -97,7 +97,8 @@ function addEvent(nEvent, data){
 			setTimeout(function(){
 				$('#addEventForm input').val('');
 				//$('#addEventForm #addEventTe').val('');
-				tinyMCE.activeEditor.setContent('');
+				//tinyMCE.activeEditor.setContent('');
+				$('#addEventForm textarea').val('');
 				$('#addEventForm #addEventEr').empty();
 				$('#addEventForm').modal('hide');
 				
@@ -167,23 +168,25 @@ function buildCollapsePanel(data, collapseID, query){
 	var panelContent = $('<div>').addClass('panel-collapse collapse').attr('id',collapseID);
 	//var pText = ('<p>').append();
 	var panelBody = $('<div>').addClass('panel-body row').append(panelImg).append('<p class="col-sm-8 editable">'+data.get("text")+'<p>');
-	//var eventText = $('.panel-body p');
-	//eventText.addClass('col-sm-8 editable');
 
-	var panelSubmit = $('<button>').addClass('btn btn-default').append('Submit changes').on('click',function(){
+
+	var panelSubmit = $('<button>').addClass('btn btn-default').append('Submit changes').on('click',function(event){
 		// Updating the event
 		event.preventDefault();
     	var textUpdated = tinyMCE.activeEditor.getContent();
+    	alert('submitted');
     
 		data.save(null, {
 			  success: function(gameScore) {
+			  	alert('saved');
 			    data.set("text", textUpdated);
 			    data.save();
 			    // Refreshing the list after successfull update
 			    /**/
-			    var queryEvent = new Parse.Query(Parse.Object.extend("Event"));
-			    listEvent(queryEvent);
-			    
+			    setTimeout(function(){
+			    	var queryEvent = new Parse.Query(Parse.Object.extend("Event"));
+			    	listEvent(queryEvent);	
+			    },1000);
 			  }
 		});
 			    	
